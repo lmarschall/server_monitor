@@ -1,0 +1,8 @@
+from django.shortcuts import render
+
+# Create your views here.
+
+def index(request):
+
+    context = {'search_string': ""}
+    return render(request, 'app/index.html', context)
