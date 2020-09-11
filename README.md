@@ -1,2 +1,2 @@
 # server_monitor
-monitoring an ubuntu server through django application
+monitoring metrics of server
