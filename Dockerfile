@@ -1,6 +1,6 @@
 FROM python:3.6.7
-COPY . /app
+ADD . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
-ENV FLASK_APP=app:app
-CMD ["flask", "run", "--host", "0.0.0.0"]
+EXPOSE 8000
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
