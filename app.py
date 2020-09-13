@@ -1,4 +1,7 @@
 import psutil
+# import nvgpu
+import nvidia_smi
+# import gpustat
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)
@@ -27,6 +30,22 @@ def api():
 
     # get the memory of the server
     metrics.update(memory=psutil.virtual_memory())
+
+    # metrics.update(gpu_info=nvgpu.gpu_info())
+
+    nvidia_smi.nvmlInit()
+    handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
+    # card id 0 hardcoded here, there is also a call to get all available card ids, so we could iterate
+
+    res = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
+
+    print(f'gpu: {res.gpu}%, gpu-mem: {res.memory}%')
+
+    metrics.update(gpu_utilization=res.gpu)
+
+    metrics.update(gpu_memory=res.memory)
+
+    # gpustats = gpustat.new_query()
 
     return {
         "metrics": metrics
