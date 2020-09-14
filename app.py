@@ -33,19 +33,22 @@ def api():
 
     # metrics.update(gpu_info=nvgpu.gpu_info())
 
-    nvidia_smi.nvmlInit()
-    handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
-    # card id 0 hardcoded here, there is also a call to get all available card ids, so we could iterate
+    try:
+        nvidia_smi.nvmlInit()
+        handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
+        # card id 0 hardcoded here, there is also a call to get all available card ids, so we could iterate
 
-    res = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
+        res = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
 
-    print(f'gpu: {res.gpu}%, gpu-mem: {res.memory}%')
+        print(f'gpu: {res.gpu}%, gpu-mem: {res.memory}%')
 
-    metrics.update(gpu_utilization=res.gpu)
+        metrics.update(gpu_utilization=res.gpu)
 
-    metrics.update(gpu_memory=res.memory)
+        metrics.update(gpu_memory=res.memory)
 
-    # gpustats = gpustat.new_query()
+        metrics.update(gpu_avaible=True)
+    except:
+        metrics.update(gpu_avaible=False)
 
     return {
         "metrics": metrics
